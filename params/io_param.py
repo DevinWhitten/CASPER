@@ -1,5 +1,5 @@
 {
 "plot" : True,
 "normalize" : True,
-"output_name" : "giant_test_CH"
+"output_name" : "g77-61-result"
 }

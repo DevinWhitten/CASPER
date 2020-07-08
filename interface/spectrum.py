@@ -42,7 +42,8 @@ def obtain_flux(data):
         return data[0].flatten()
 
 class Spectrum():
-    def __init__(self, spec, name, wl_range=[3800, 6200], is_fits=True):
+    def __init__(self, spec, name, wl_range=[3000, 6000], is_fits=True):
+        # changed from wl_range=[3800,6200] J. Yoon 06-17-2020
 
         self.name = name
         print("... initializing:  ", name)
@@ -120,6 +121,15 @@ class Spectrum():
         ## Basically if the EBV is finite,
         ## assume that photometry needs to be corrected
 
+        ##-- Jinmi Yoon 06-12-2020
+        ## MAke sure the colors used in CASPER are from UKIRT colors.
+        ## If you have 2MASS colors, convert them to the UKIRT colors by following
+        ## a transformation equation found at https://www.astro.caltech.edu/~jmc/2mass/v3/transformations/
+        ## (Ks)2MASS     =    KUKIRT + (0.003 ± 0.004) + (0.004 ± 0.006)(J-K)UKIRT
+        ## (J-H)2MASS    =    (1.075 ± 0.013)(J-H)UKIRT + (-0.032 ± 0.006)
+        ## (J-Ks)2MASS   =    (1.070 ± 0.008)(J-K)UKIRT + (-0.015 ± 0.006)
+        ## (H-Ks)2MASS   =    (1.071 ± 0.026)(H-K)UKIRT + (0.014 ± 0.005)
+        
         self.PHOTO_0 = {key: float(row[key]) for key in ['J-K', 'H-K', 'H-K', 'g-r']}
 
         if float(row['EBV_SFD']) > 0:
@@ -140,8 +150,7 @@ class Spectrum():
 
 
     ############################################################
-    def trim_frame(self, bounds= [3000, 5000]):
-
+    def trim_frame(self, bounds= [3500, 5000]): # changed from [3000,5000] J. Yoon 06-17-2020
         self.frame = self.frame[self.frame['wave'].between(bounds[0], bounds[1], inclusive=True)]
         return
 
